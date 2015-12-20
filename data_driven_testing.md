@@ -222,6 +222,78 @@ Data values that aren’t of interest can be ignored with an underscore (_):
 where:
 [a, b, _, c] << sql.rows("select * from maxdata")
 
+###Data Variable Assignment
+A data variable can be directly assigned a value:
+一个数据变量呗直接分配一个值
+...
+where:
+a = 3
+b = Math.random() * 100
+c = a > b ? a : b
+Assignments are re-evaluated for every iteration. As already shown above, the right-hand side of an assignment may refer to other data variables:
+
+分配被重新评估在每个迭代。如上面所示，右边部分分配可以关联其他数据变量。
+...
+where:
+row << sql.rows("select * from maxdata")
+// pick apart columns
+a = row.a
+b = row.b
+c = row.c
+###Combining Data Tables, Data Pipes, and Variable Assignments
+Data tables, data pipes, and variable assignments can be combined as needed:
+数据表 数据管道 多个变量分配被组合作为需要
+...
+where:
+a | _
+3 | _
+7 | _
+0 | _
+
+b << [5, 0, 0]
+
+c = a > b ? a : b
+###Number of Iterations
+The number of iterations depends on how much data is available. Successive executions of the same method can yield different numbers of iterations. If a data provider runs out of values sooner than its peers, an exception will occur. Variable assignments don’t affect the number of iterations. A where: block that only contains assignments yields exactly one iteration.
+
+迭代间的数量依赖多少数据时可变的。连续执行相同的方法能产生不同数量的迭代。如果一个数据提供者运行出值比他的同行快，一个异常将产生。多个变量分配不能影响迭代数量。一个where：block只包含分配确切产生一个迭代。
+
+###Closing of Data Providers
+After all iterations have completed, the zero-argument close method is called on all data providers that have such a method.
+
+More on Unrolled Method Names
+An unrolled method name is similar to a Groovy GString, except for the following differences:
+
+Expressions are denoted with # instead of $ [3], and there is no equivalent for the ${…​} syntax.
+
+Expressions only support property access and zero-arg method calls.
+
+Given a class Person with properties name and age, and a data variable person of type Person, the following are valid method names:
+
+def "#person is #person.age years old"() { ... } // property access
+def "#person.name.toUpperCase()"() { ... } // zero-arg method call
+Non-string values (like #person above) are converted to Strings according to Groovy semantics.
+
+The following are invalid method names:
+def "#person.name.split(' ')[1]" { ... } // cannot have method arguments
+def "#person.age / 2" { ... } // cannot use operators
+If necessary, additional data variables can be introduced to hold more complex expression:
+
+def "#lastName"() {
+    ...
+    where:
+    person << ...
+    lastName = person.name.split(' ')[1]
+}
+1. The idea behind allowing method parameters is to enable better IDE support. However, recent versions of IntelliJ IDEA recognize data variables automatically, and even infer their types from the values contained in the data table.
+2. For example, a feature method could use data variables in its setup: block, but not in any conditions.
+3. Groovy syntax does not allow dollar signs in method names.
+
+所有迭代完成，
+
+
+
+
 
 
 
