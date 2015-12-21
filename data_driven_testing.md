@@ -260,8 +260,9 @@ The number of iterations depends on how much data is available. Successive execu
 
 ###Closing of Data Providers
 After all iterations have completed, the zero-argument close method is called on all data providers that have such a method.
+所有迭代完成后，没有参数的关闭方法被调用在所有数据提供者有如此的方法
 
-More on Unrolled Method Names
+###More on Unrolled Method Names
 An unrolled method name is similar to a Groovy GString, except for the following differences:
 
 Expressions are denoted with # instead of $ [3], and there is no equivalent for the ${…​} syntax.
@@ -269,6 +270,13 @@ Expressions are denoted with # instead of $ [3], and there is no equivalent for 
 Expressions only support property access and zero-arg method calls.
 
 Given a class Person with properties name and age, and a data variable person of type Person, the following are valid method names:
+
+
+一分unrolled方法名根grooy的字符串类似。除了接下来的不同：
+表达被标注# 代替 $，没有相等于 ${…​}语法
+表达式只支持属性访问和无参调用
+给一个Person类只有name与age以及数据类型为person的变量。接下来的校验方法名是：
+
 
 def "#person is #person.age years old"() { ... } // property access
 def "#person.name.toUpperCase()"() { ... } // zero-arg method call
@@ -289,10 +297,9 @@ def "#lastName"() {
 2. For example, a feature method could use data variables in its setup: block, but not in any conditions.
 3. Groovy syntax does not allow dollar signs in method names.
 
-所有迭代完成，
-
-
-
+1.想法背后运行方法参数更好的被IDE支持。然后 最新版本的IntelliJ IDEA 自动认出数据变量，甚至从数据表的值推断出他们的类型
+2.例如，一个特性方法能使用数据变量在setup: block 但不能在其他任何条件
+3. groovy语法不运行$符号在方法名称中
 
 
 
